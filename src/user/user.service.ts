@@ -5,14 +5,17 @@ import { PrismaService } from 'src/services/prisma.service';
 import { User } from '@prisma/client';
 import { ErrorHandlingService } from 'src/services/error_handling.service';
 
+declare type UserOrError = User | string;
+declare type UserListOrError = User[] | string;
+
 @Injectable()
 export class UserService {
   constructor(
     private readonly prisma: PrismaService,
-    private errorHandlingService: ErrorHandlingService,
+    private readonly errorHandlingService: ErrorHandlingService,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createUserDto: CreateUserDto): Promise<UserOrError> {
     const { name, email, password } = createUserDto;
 
     let result;
@@ -31,7 +34,7 @@ export class UserService {
     return result;
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<UserListOrError> {
     let result;
     try {
       result = await this.prisma.user.findMany();
@@ -42,7 +45,7 @@ export class UserService {
     return result;
   }
 
-  async findOne(id: number): Promise<User> {
+  async findOne(id: number): Promise<UserOrError> {
     let user;
     try {
       user = await this.prisma.user.findUnique({
@@ -54,7 +57,7 @@ export class UserService {
     return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<UserOrError> {
     let user;
     try {
       user = await this.prisma.user.update({
@@ -69,7 +72,7 @@ export class UserService {
     return user;
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<UserOrError> {
     let result;
     try {
       result = await this.prisma.user.delete({
