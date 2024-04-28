@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-//import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/services/prisma.service';
 import { User } from '@prisma/client';
 import { ErrorHandlingService } from 'src/services/error_handling.service';
@@ -32,24 +32,55 @@ export class UserService {
   }
 
   async findAll(): Promise<User[]> {
-    const userList = await this.prisma.user.findMany();
+    let result;
+    try {
+      result = await this.prisma.user.findMany();
+    } catch (e) {
+      result = this.errorHandlingService.handlePrisma(e);
+    }
 
-    return userList;
+    return result;
   }
 
   async findOne(id: number): Promise<User> {
-    const user = await this.prisma.user.findUnique({
-      where: { id: id },
-    });
-
+    let user;
+    try {
+      user = await this.prisma.user.findUnique({
+        where: { id: id },
+      });
+    } catch (e) {
+      user = this.errorHandlingService.handlePrisma(e);
+    }
     return user;
   }
 
-  // update(id: number, updateUserDto: UpdateUserDto) {
-  //   return `This action updates a #${id} user`;
-  // }
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    let user;
+    try {
+      user = await this.prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: updateUserDto,
+      });
+    } catch (e) {
+      user = this.errorHandlingService.handlePrisma(e);
+    }
+    return user;
+  }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} user`;
-  // }
+  async remove(id: number) {
+    let result;
+    try {
+      result = await this.prisma.user.delete({
+        where: {
+          id: id,
+        },
+      });
+    } catch (e) {
+      result = this.errorHandlingService.handlePrisma(e);
+    }
+
+    return result;
+  }
 }
