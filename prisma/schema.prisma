@@ -14,12 +14,12 @@ datasource db {
 }
 
 model User {
-  id            Int             @id @default(autoincrement())
-  name          String          @unique
-  email         String          @unique
-  password      String
-  UserToTitle   UserToTitle[]
-  MedalInstance MedalInstance[]
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  email       String        @unique
+  password    String
+  UserToTitle UserToTitle[]
+  UserMedal   UserMedal[]
 }
 
 model UserToTitle {
@@ -42,27 +42,26 @@ model Title {
 }
 
 model Medal {
-  name          String          @id
-  condition     String
-  MedalInstance MedalInstance[]
+  name      String      @id
+  condition String
+  UserMedal UserMedal[]
 }
 
 model MedalInstance {
-  medal_id   Int       @id
+  medal_id   Int       @id @default(autoincrement())
   user_id    Int
   medal_name String
   UserMedal  UserMedal @relation(fields: [user_id, medal_name], references: [user_id, medal_name])
   createdAt  DateTime  @default(now())
   deletedAt  DateTime?
-  User       User?     @relation(fields: [userId], references: [id])
-  userId     Int?
-  Medal      Medal?    @relation(fields: [medalName], references: [name])
-  medalName  String?
 }
 
 model UserMedal {
   user_id       Int
   medal_name    String
+  total_level   Int @default(0)
+  User          User            @relation(fields: [user_id], references: [id])
+  Medal         Medal           @relation(fields: [medal_name], references: [name])
   MedalInstance MedalInstance[]
 
   @@id([user_id, medal_name])
