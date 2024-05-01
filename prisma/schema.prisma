@@ -14,12 +14,12 @@ datasource db {
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
-  name        String        @unique
-  email       String        @unique
-  password    String
-  UserToTitle UserToTitle[]
-  UserMedal   UserMedal[]
+  id            Int             @id @default(autoincrement())
+  name          String          @unique
+  email         String          @unique
+  password      String
+  UserToTitle   UserToTitle[]
+  MedalInstance MedalInstance[]
 }
 
 model UserToTitle {
@@ -42,19 +42,30 @@ model Title {
 }
 
 model Medal {
-  name      String      @id
-  condition String
-  UserMedal UserMedal[]
+  name          String          @id
+  condition     String
+  MedalInstance MedalInstance[]
+}
+
+model MedalInstance {
+  medal_id   Int       @id
+  user_id    Int
+  medal_name String
+  UserMedal  UserMedal @relation(fields: [user_id, medal_name], references: [user_id, medal_name])
+  createdAt  DateTime  @default(now())
+  deletedAt  DateTime?
+  User       User?     @relation(fields: [userId], references: [id])
+  userId     Int?
+  Medal      Medal?    @relation(fields: [medalName], references: [name])
+  medalName  String?
 }
 
 model UserMedal {
-  medal_id   Int       @id
-  user_id    Int
-  User       User      @relation(fields: [user_id], references: [id])
-  medal_name String
-  Medal      Medal     @relation(fields: [medal_name], references: [name])
-  createdAt  DateTime  @default(now())
-  deletedAt  DateTime?
+  user_id       Int
+  medal_name    String
+  MedalInstance MedalInstance[]
+
+  @@id([user_id, medal_name])
 }
 
 enum Elos {
