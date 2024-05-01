@@ -14,20 +14,23 @@ datasource db {
 }
 
 model User {
-  id           Int           @id @default(autoincrement())
-  name         String        @unique
-  email        String        @unique
-  password     String
-  UserToTitle  UserToTitle[]
+  id          Int           @id @default(autoincrement())
+  name        String        @unique
+  email       String        @unique
+  password    String
+  UserToTitle UserToTitle[]
+  UserMedal   UserMedal[]
 }
 
 model UserToTitle {
-  user_id Int
-  title   String
-  User    User   @relation(fields: [user_id], references: [id])
-  Title   Title  @relation(fields: [title], references: [title])
-  IsChosen Boolean
-  Valid Boolean
+  user_id   Int
+  title     String
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+  User      User      @relation(fields: [user_id], references: [id])
+  Title     Title     @relation(fields: [title], references: [title])
+  IsChosen  Boolean
+  Valid     Boolean
 
   @@id([user_id, title])
 }
@@ -36,4 +39,28 @@ model Title {
   title       String        @id
   description String?
   UserToTitle UserToTitle[]
+}
+
+model Medal {
+  name      String      @id
+  condition String
+  UserMedal UserMedal[]
+}
+
+model UserMedal {
+  medal_id   Int       @id
+  user_id    Int
+  User       User      @relation(fields: [user_id], references: [id])
+  medal_name String
+  Medal      Medal     @relation(fields: [medal_name], references: [name])
+  createdAt  DateTime  @default(now())
+  deletedAt  DateTime?
+}
+
+enum Elos {
+  Bronze
+  Prata
+  Ouro
+  Diamante
+  Sexo
 }
