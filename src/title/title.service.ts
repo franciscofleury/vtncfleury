@@ -18,7 +18,7 @@ export class TitleService {
   async create(createTitleDto: CreateTitleDto): Promise<TitleOrError> {
     let title;
     try {
-      title = await this.prisma.title.create({
+      title = await this.prisma.client.title.create({
         data: createTitleDto,
       });
     } catch (e) {
@@ -31,7 +31,7 @@ export class TitleService {
   async findAll(): Promise<TitleListOrError> {
     let titleList;
     try {
-      titleList = await this.prisma.title.findMany();
+      titleList = await this.prisma.client.title.findMany();
     } catch (e) {
       titleList = this.errorHandlingService.handlePrisma(e);
     }
@@ -42,7 +42,7 @@ export class TitleService {
   async findOne(titleName: string): Promise<TitleOrError> {
     let title;
     try {
-      title = await this.prisma.title.findUnique({
+      title = await this.prisma.client.title.findUnique({
         where: {
           title: titleName,
         },
@@ -60,7 +60,7 @@ export class TitleService {
   ): Promise<TitleOrError> {
     let title;
     try {
-      title = await this.prisma.title.update({
+      title = await this.prisma.client.title.update({
         where: {
           title: titleName,
         },
@@ -76,7 +76,7 @@ export class TitleService {
   async remove(titleName: string): Promise<TitleOrError> {
     let title;
     try {
-      title = await this.prisma.title.delete({
+      title = await this.prisma.client.title.delete({
         where: {
           title: titleName,
         },

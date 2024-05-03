@@ -20,7 +20,7 @@ export class UserService {
 
     let result;
     try {
-      result = await this.prisma.user.create({
+      result = await this.prisma.client.user.create({
         data: {
           name,
           email,
@@ -37,7 +37,7 @@ export class UserService {
   async findAll(): Promise<UserListOrError> {
     let result;
     try {
-      result = await this.prisma.user.findMany();
+      result = await this.prisma.client.user.findMany();
     } catch (e) {
       result = this.errorHandlingService.handlePrisma(e);
     }
@@ -48,7 +48,7 @@ export class UserService {
   async findOne(id: number): Promise<UserOrError> {
     let user;
     try {
-      user = await this.prisma.user.findUnique({
+      user = await this.prisma.client.user.findUnique({
         where: { id: id },
       });
     } catch (e) {
@@ -60,7 +60,7 @@ export class UserService {
   async update(id: number, updateUserDto: UpdateUserDto): Promise<UserOrError> {
     let user;
     try {
-      user = await this.prisma.user.update({
+      user = await this.prisma.client.user.update({
         where: {
           id: id,
         },
@@ -75,7 +75,7 @@ export class UserService {
   async remove(id: number): Promise<UserOrError> {
     let result;
     try {
-      result = await this.prisma.user.delete({
+      result = await this.prisma.client.user.delete({
         where: {
           id: id,
         },

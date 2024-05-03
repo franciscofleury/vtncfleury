@@ -5,7 +5,7 @@ import {
 } from '@prisma/client/runtime/library';
 import { PRISMA_ERRORS } from 'src/constants/error';
 
-declare type PrismaError =
+export declare type PrismaError =
   | PrismaClientKnownRequestError
   | PrismaClientUnknownRequestError;
 
