@@ -6,7 +6,6 @@ import {
   Param,
   Patch,
   Delete,
-  Query,
 } from '@nestjs/common';
 
 import { UserService } from './user.service';
@@ -31,16 +30,6 @@ export class UserController {
     return { data: users };
   }
 
-  @Get('medal')
-  async getMedal(
-    @Query('user_id') user_id: string,
-    @Query('medal_name') medal_name: string,
-  ) {
-    const userMedal = await this.userService.getMedalInfo(+user_id, medal_name);
-
-    return { data: userMedal };
-  }
-
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const user = await this.userService.findOne(+id);
@@ -60,16 +49,5 @@ export class UserController {
     const user = await this.userService.remove(+id);
 
     return { data: user };
-  }
-
-  // Award funciton should be moved to medal resource
-  @Post('award')
-  async award(
-    @Query('medal_name') medal_name: string,
-    @Query('user_id') user_id: string,
-  ) {
-    const userMedal = await this.userService.award(+user_id, medal_name);
-
-    return { data: userMedal };
   }
 }

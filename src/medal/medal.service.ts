@@ -102,12 +102,17 @@ export class MedalService {
   async getMedalInfo(user_id: number, medal_name: string) {
     let result;
     try {
-      result = await this.prisma.client.userMedal.findUnique({
+      result = await this.prisma.client.userMedal.upsert({
         where: {
           user_id_medal_name: {
             user_id,
             medal_name,
           },
+        },
+        update: {},
+        create: {
+          user_id,
+          medal_name,
         },
       });
     } catch (e) {

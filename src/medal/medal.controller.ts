@@ -6,16 +6,39 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { MedalService } from './medal.service';
 import { CreateMedalDto } from './dto/create-medal.dto';
 import { UpdateMedalDto } from './dto/update-medal.dto';
-import { PrismaService } from 'src/services/prisma.service';
-import { ErrorHandlingService } from 'src/services/error_handling.service';
 
 @Controller('medal')
 export class MedalController {
   constructor(private readonly medalService: MedalService) {}
+
+  // USERMEDAL ENDPOINTS
+  @Get('info')
+  async findUserMedal(
+    @Query('user_id') user_id: string,
+    @Query('medal') medal_name: string,
+  ) {
+    const userMedal = await this.medalService.getMedalInfo(
+      +user_id,
+      medal_name,
+    );
+
+    return { data: userMedal };
+  }
+
+  @Post('award')
+  async awardUser(
+    @Body('user_id') user_id: number,
+    @Body('medal') medal_name: string,
+  ) {
+    const medalInstance = await this.medalService.award(user_id, medal_name);
+
+    return { data: medalInstance };
+  }
 
   @Post()
   async create(@Body() createMedalDto: CreateMedalDto) {
@@ -33,7 +56,7 @@ export class MedalController {
 
   @Get(':name')
   async findOne(@Param('name') name: string) {
-    const medal = this.medalService.findOne(name);
+    const medal = await this.medalService.findOne(name);
 
     return { data: medal };
   }
@@ -54,13 +77,4 @@ export class MedalController {
 
     return { data: deleted };
   }
-}
-
-@Controller("user_medal")
-export class UserMedalController {
-  constructor(
-    private readonly medalService: MedalService,
-    private readonly errorHandlingService: ErrorHandlingService,
-  )
-
 }
