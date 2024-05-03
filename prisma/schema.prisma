@@ -51,7 +51,7 @@ model MedalInstance {
   medal_id   Int       @id @default(autoincrement())
   user_id    Int
   medal_name String
-  UserMedal  UserMedal @relation(fields: [user_id, medal_name], references: [user_id, medal_name])
+  UserMedal  UserMedal @relation(fields: [user_id, medal_name], references: [user_id, medal_name], onDelete: Cascade)
   createdAt  DateTime  @default(now())
   deletedAt  DateTime?
 }
@@ -61,7 +61,7 @@ model UserMedal {
   medal_name    String
   total_level   Int @default(0)
   User          User            @relation(fields: [user_id], references: [id])
-  Medal         Medal           @relation(fields: [medal_name], references: [name])
+  Medal         Medal           @relation(fields: [medal_name], references: [name], onDelete: Cascade)
   MedalInstance MedalInstance[]
 
   @@id([user_id, medal_name])

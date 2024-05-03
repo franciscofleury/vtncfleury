@@ -86,36 +86,4 @@ export class UserService {
 
     return result;
   }
-
-  async award(user_id: number, medal_name: string) {
-    let result;
-    try {
-      result = await this.prisma.client.userMedal.awardMedal(
-        user_id,
-        medal_name,
-      );
-    } catch (e) {
-      result = this.errorHandlingService.handlePrisma(e);
-    }
-
-    return result;
-  }
-
-  async getMedalInfo(user_id: number, medal_name: string) {
-    let result;
-    try {
-      result = await this.prisma.client.userMedal.findUnique({
-        where: {
-          user_id_medal_name: {
-            user_id,
-            medal_name,
-          },
-        },
-      });
-    } catch (e) {
-      result = this.errorHandlingService.handlePrisma(e);
-    }
-
-    return result;
-  }
 }
