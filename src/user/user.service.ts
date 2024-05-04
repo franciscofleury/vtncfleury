@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/services/prisma.service';
-import { User, UserMedal } from '@prisma/client';
+import { User, UserMedal, UserTitle } from '@prisma/client';
 import { ErrorHandlingService } from 'src/services/error_handling.service';
 
 declare type UserOrError = User | string;
 declare type UserListOrError = User[] | string;
 declare type UserMedalListOrError = UserMedal[] | string;
+declare type UserTitleListOrError = UserTitle[] | string;
 
 @Injectable()
 export class UserService {
@@ -101,5 +102,20 @@ export class UserService {
     }
 
     return user_medals;
+  }
+
+  async getTitles(id: number): Promise<UserTitleListOrError> {
+    let user_titles;
+    try {
+      user_titles = await this.prisma.client.userTitle.findMany({
+        where: {
+          user_id: id,
+        },
+      });
+    } catch (e) {
+      user_titles = this.errorHandlingService.handlePrisma(e);
+    }
+
+    return user_titles;
   }
 }
