@@ -16,6 +16,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get('medal/:user_id')
+  async medalProgress(@Query('user_id') user_id: number) {
+    const user_medal_list = await this.userService.getMedals(user_id);
+
+    return { data: user_medal_list };
+  }
+
   @Post()
   async create(@Body() createUserDto: CreateUserDto) {
     const user = await this.userService.create(createUserDto);
