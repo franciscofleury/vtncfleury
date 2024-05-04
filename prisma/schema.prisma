@@ -18,11 +18,11 @@ model User {
   name        String        @unique
   email       String        @unique
   password    String
-  UserToTitle UserToTitle[]
+  UserTitle UserTitle[]
   UserMedal   UserMedal[]
 }
 
-model UserToTitle {
+model UserTitle {
   user_id   Int
   title     String
   createdAt DateTime  @default(now())
@@ -38,7 +38,7 @@ model UserToTitle {
 model Title {
   title       String        @id
   description String?
-  UserToTitle UserToTitle[]
+  UserTitle UserTitle[]
 }
 
 model Medal {
