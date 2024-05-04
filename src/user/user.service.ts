@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/services/prisma.service';
-import { User } from '@prisma/client';
+import { User, UserMedal } from '@prisma/client';
 import { ErrorHandlingService } from 'src/services/error_handling.service';
 
 declare type UserOrError = User | string;
