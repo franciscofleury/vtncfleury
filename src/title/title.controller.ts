@@ -15,6 +15,16 @@ import { UpdateTitleDto } from './dto/update-title.dto';
 export class TitleController {
   constructor(private readonly titleService: TitleService) {}
 
+  @Post('concede')
+  async concede(
+    @Body('user_id') user_id: number,
+    @Body('title') title: string,
+  ) {
+    const user_title = await this.titleService.concede(user_id, title);
+
+    return { data: user_title };
+  }
+
   @Post()
   async create(@Body() createTitleDto: CreateTitleDto) {
     const title_element = await this.titleService.create(createTitleDto);

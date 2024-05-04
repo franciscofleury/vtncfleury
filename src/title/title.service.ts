@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CreateTitleDto } from './dto/create-title.dto';
 import { UpdateTitleDto } from './dto/update-title.dto';
-import { Title } from '@prisma/client';
+import { Title, UserTitle } from '@prisma/client';
 import { ErrorHandlingService } from '../services/error_handling.service';
 import { PrismaService } from '../services/prisma.service';
 
 declare type TitleOrError = Title | string;
 declare type TitleListOrError = Title[] | string;
-
+declare type UserTitleOrError = UserTitle | string;
 @Injectable()
 export class TitleService {
   constructor(
@@ -86,5 +86,23 @@ export class TitleService {
     }
 
     return title;
+  }
+
+  async concede(user_id: number, title: string): Promise<UserTitleOrError> {
+    let result;
+    try {
+      result = await this.prisma.client.userTitle.create({
+        data: {
+          user_id,
+          title,
+          Valid: true,
+          IsChosen: false,
+        },
+      });
+    } catch (e) {
+      result = this.errorHandlingService.handlePrisma(e);
+    }
+
+    return result;
   }
 }

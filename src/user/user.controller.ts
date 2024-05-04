@@ -25,7 +25,7 @@ export class UserController {
 
   @Get('title/:user_id')
   async titleProgress(@Param('user_id') user_id: number) {
-    const user_title_list = await this.userService.getTitles(user_id);
+    const user_title_list = await this.userService.getTitles(+user_id);
 
     return { data: user_title_list };
   }
