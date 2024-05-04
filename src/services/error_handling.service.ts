@@ -18,6 +18,7 @@ export class ErrorHandlingService {
   }
   // Use this method to handle any prisma errors
   public handlePrisma(error: PrismaError) {
+    console.log(error);
     if (error instanceof PrismaClientKnownRequestError) {
       return this.handleKnownPrisma(error);
     } else if (error instanceof PrismaClientUnknownRequestError) {
