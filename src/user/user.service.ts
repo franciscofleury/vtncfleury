@@ -7,6 +7,7 @@ import { ErrorHandlingService } from 'src/services/error_handling.service';
 
 declare type UserOrError = User | string;
 declare type UserListOrError = User[] | string;
+declare type UserMedalListOrError = UserMedal[] | string;
 
 @Injectable()
 export class UserService {
@@ -85,5 +86,20 @@ export class UserService {
     }
 
     return result;
+  }
+
+  async getMedals(id: number): Promise<UserMedalListOrError> {
+    let user_medals;
+    try {
+      user_medals = await this.prisma.client.userMedal.findMany({
+        where: {
+          user_id: id,
+        },
+      });
+    } catch (e) {
+      user_medals = this.errorHandlingService.handlePrisma(e);
+    }
+
+    return user_medals;
   }
 }
