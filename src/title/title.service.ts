@@ -105,4 +105,19 @@ export class TitleService {
 
     return result;
   }
+
+  async getUsers(title: string) {
+    let user_titles;
+    try {
+      user_titles = await this.prisma.client.userTitle.findMany({
+        where: {
+          title,
+        },
+      });
+    } catch (e) {
+      user_titles = this.errorHandlingService.handlePrisma(e);
+    }
+
+    return user_titles;
+  }
 }
