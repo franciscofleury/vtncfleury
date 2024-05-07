@@ -99,7 +99,7 @@ export class MedalService {
     return result;
   }
 
-  async getMedalInfo(user_id: number, medal_name: string) {
+  async getUserMedalInfo(user_id: number, medal_name: string) {
     let result;
     try {
       result = await this.prisma.client.userMedal.upsert({
@@ -120,5 +120,20 @@ export class MedalService {
     }
 
     return result;
+  }
+
+  async getMedalInfo(medal_name: string) {
+    let user_medal_list;
+    try {
+      user_medal_list = await this.prisma.client.userMedal.findMany({
+        where: {
+          medal_name,
+        },
+      });
+    } catch (e) {
+      user_medal_list = this.errorHandlingService.handlePrisma(e);
+    }
+
+    return user_medal_list;
   }
 }

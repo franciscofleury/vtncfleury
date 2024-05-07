@@ -17,12 +17,19 @@ export class MedalController {
   constructor(private readonly medalService: MedalService) {}
 
   // USERMEDAL ENDPOINTS
-  @Get('info')
+  @Get('info/:medal_name')
+  async findMedalInfo(@Param('medal_name') medal_name: string) {
+    const userMedals = await this.medalService.getMedalInfo(medal_name);
+
+    return { data: userMedals }; 
+  }
+
+  @Get('progress')
   async findUserMedal(
     @Query('user_id') user_id: string,
     @Query('medal') medal_name: string,
   ) {
-    const userMedal = await this.medalService.getMedalInfo(
+    const userMedal = await this.medalService.getUserMedalInfo(
       +user_id,
       medal_name,
     );
