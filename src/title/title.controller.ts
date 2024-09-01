@@ -10,7 +10,9 @@ import {
 import { TitleService } from './title.service';
 import { CreateTitleDto } from './dto/create-title.dto';
 import { UpdateTitleDto } from './dto/update-title.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('title')
 @Controller('title')
 export class TitleController {
   constructor(private readonly titleService: TitleService) {}

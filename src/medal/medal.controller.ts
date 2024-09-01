@@ -11,7 +11,10 @@ import {
 import { MedalService } from './medal.service';
 import { CreateMedalDto } from './dto/create-medal.dto';
 import { UpdateMedalDto } from './dto/update-medal.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+
+@ApiTags('medal')
 @Controller('medal')
 export class MedalController {
   constructor(private readonly medalService: MedalService) {}
