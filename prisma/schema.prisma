@@ -14,20 +14,23 @@ datasource db {
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
+  user_id          Int           @id @default(autoincrement())
   name        String        @unique
   email       String        @unique
   password    String
   UserTitle UserTitle[]
   UserMedal   UserMedal[]
+  created_at DateTime
+  updated_at DateTime 
 }
 
 model UserTitle {
   user_id   Int
   title     String
-  createdAt DateTime  @default(now())
-  deletedAt DateTime?
-  User      User      @relation(fields: [user_id], references: [id])
+  created_at DateTime  @default(now())
+  updated_at DateTime
+  deleted_at DateTime?
+  User      User      @relation(fields: [user_id], references: [user_id])
   Title     Title     @relation(fields: [title], references: [title])
   IsChosen  Boolean
   Valid     Boolean
@@ -39,11 +42,15 @@ model Title {
   title       String        @id
   description String?
   UserTitle UserTitle[]
+  created_at DateTime
+  updated_at DateTime
 }
 
 model Medal {
   name      String      @id
   condition String
+  created_at DateTime
+  updated_at DateTime
   UserMedal UserMedal[]
 }
 
@@ -60,11 +67,32 @@ model UserMedal {
   user_id       Int
   medal_name    String
   total_level   Int @default(0)
-  User          User            @relation(fields: [user_id], references: [id])
+  User          User            @relation(fields: [user_id], references: [user_id])
   Medal         Medal           @relation(fields: [medal_name], references: [name], onDelete: Cascade)
   MedalInstance MedalInstance[]
 
   @@id([user_id, medal_name])
+}
+
+model Event {
+  event_id Int @id @default(autoincrement())
+  event_name String?
+  host_id Int?
+  planned_interval_id Int? @unique
+  PlannedInterval      Interval?      @relation(name: "PlannedIntervalRelation", fields: [planned_interval_id], references: [interval_id])
+  real_interval_id Int? @unique
+  RealInterval      Interval?      @relation(name: "RealIntervalRelation", fields: [real_interval_id], references: [interval_id])
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+}
+
+model Interval {
+  interval_id Int @id @default(autoincrement())
+  begin_time DateTime
+  end_time DateTime
+  EventsPlanned      Event?    @relation(name: "PlannedIntervalRelation")
+  EventsReal          Event?    @relation(name: "RealIntervalRelation") 
+  //Botar algo para deletar caso não esteja fazendo nenhuma relação
 }
 
 enum Elos {
