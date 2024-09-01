@@ -1,8 +1,19 @@
 import { NestFactory } from '@nestjs/core';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(3380);
+
+  const config = new DocumentBuilder()
+    .setTitle('VTNC API')
+    .setDescription('API para o projeto VTNC site')
+    .setVersion('1.0')
+    .addTag('vtnc')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
+  await app.listen(6969);
 }
 bootstrap();
