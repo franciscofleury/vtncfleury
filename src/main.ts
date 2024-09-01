@@ -9,7 +9,6 @@ async function bootstrap() {
     .setTitle('VTNC API')
     .setDescription('API para o projeto VTNC site')
     .setVersion('1.0')
-    .addTag('vtnc')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
