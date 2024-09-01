@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,85 +8,84 @@ datasource db {
 }
 
 model User {
-  user_id          Int           @id @default(autoincrement())
-  name        String        @unique
-  email       String        @unique
-  password    String
-  UserTitle UserTitle[]
-  UserMedal   UserMedal[]
+  user_id    Int         @id @default(autoincrement())
+  name       String      @unique
+  email      String      @unique
+  password   String
   created_at DateTime
-  updated_at DateTime 
+  updated_at DateTime
+  UserMedal  UserMedal[]
+  UserTitle  UserTitle[]
 }
 
 model UserTitle {
-  user_id   Int
-  title     String
+  user_id    Int
+  title      String
   created_at DateTime  @default(now())
   updated_at DateTime
   deleted_at DateTime?
-  User      User      @relation(fields: [user_id], references: [user_id])
-  Title     Title     @relation(fields: [title], references: [title])
-  IsChosen  Boolean
-  Valid     Boolean
+  IsChosen   Boolean
+  Valid      Boolean
+  Title      Title     @relation(fields: [title], references: [title])
+  User       User      @relation(fields: [user_id], references: [user_id])
 
   @@id([user_id, title])
 }
 
 model Title {
-  title       String        @id
+  title       String      @id
   description String?
-  UserTitle UserTitle[]
-  created_at DateTime
-  updated_at DateTime
+  created_at  DateTime
+  updated_at  DateTime
+  UserTitle   UserTitle[]
 }
 
 model Medal {
-  name      String      @id
-  condition String
+  name       String      @id
+  condition  String
   created_at DateTime
   updated_at DateTime
-  UserMedal UserMedal[]
+  UserMedal  UserMedal[]
 }
 
 model MedalInstance {
   medal_id   Int       @id @default(autoincrement())
   user_id    Int
   medal_name String
-  UserMedal  UserMedal @relation(fields: [user_id, medal_name], references: [user_id, medal_name], onDelete: Cascade)
   createdAt  DateTime  @default(now())
   deletedAt  DateTime?
+  UserMedal  UserMedal @relation(fields: [user_id, medal_name], references: [user_id, medal_name], onDelete: Cascade)
 }
 
 model UserMedal {
   user_id       Int
   medal_name    String
-  total_level   Int @default(0)
-  User          User            @relation(fields: [user_id], references: [user_id])
-  Medal         Medal           @relation(fields: [medal_name], references: [name], onDelete: Cascade)
+  total_level   Int             @default(0)
   MedalInstance MedalInstance[]
+  Medal         Medal           @relation(fields: [medal_name], references: [name], onDelete: Cascade)
+  User          User            @relation(fields: [user_id], references: [user_id])
 
   @@id([user_id, medal_name])
 }
 
 model Event {
-  event_id Int @id @default(autoincrement())
-  event_name String?
-  host_id Int?
-  planned_interval_id Int? @unique
-  PlannedInterval      Interval?      @relation(name: "PlannedIntervalRelation", fields: [planned_interval_id], references: [interval_id])
-  real_interval_id Int? @unique
-  RealInterval      Interval?      @relation(name: "RealIntervalRelation", fields: [real_interval_id], references: [interval_id])
-  created_at DateTime @default(now())
-  updated_at DateTime @default(now()) @updatedAt
+  event_id            Int       @id @default(autoincrement())
+  event_name          String?
+  host_id             Int?
+  planned_interval_id Int?      @unique
+  real_interval_id    Int?      @unique
+  created_at          DateTime  @default(now())
+  updated_at          DateTime  @default(now()) @updatedAt
+  PlannedInterval     Interval? @relation("PlannedIntervalRelation", fields: [planned_interval_id], references: [interval_id])
+  RealInterval        Interval? @relation("RealIntervalRelation", fields: [real_interval_id], references: [interval_id])
 }
 
 model Interval {
-  interval_id Int @id @default(autoincrement())
-  begin_time DateTime
-  end_time DateTime
-  EventsPlanned      Event?    @relation(name: "PlannedIntervalRelation")
-  EventsReal          Event?    @relation(name: "RealIntervalRelation") 
-  //Botar algo para deletar caso não esteja fazendo nenhuma relação
+  interval_id   Int      @id @default(autoincrement())
+  begin_time    DateTime
+  end_time      DateTime
+  EventsPlanned Event?   @relation("PlannedIntervalRelation")
+  EventsReal    Event?   @relation("RealIntervalRelation")
 }
 
 enum Elos {

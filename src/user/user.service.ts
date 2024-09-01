@@ -17,18 +17,12 @@ export class UserService {
     private readonly errorHandlingService: ErrorHandlingService,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<UserOrError> {
-    const { name, email, password } = createUserDto;
+  async create(dto: CreateUserDto): Promise<UserOrError> {
 
     let result;
+
     try {
-      result = await this.prisma.client.user.create({
-        data: {
-          name,
-          email,
-          password,
-        },
-      });
+      result = await this.prisma.client.user.create({dto});
     } catch (e) {
       result = this.errorHandlingService.handlePrisma(e);
     }
@@ -37,7 +31,9 @@ export class UserService {
   }
 
   async findAll(): Promise<UserListOrError> {
+
     let result;
+    
     try {
       result = await this.prisma.client.user.findMany();
     } catch (e) {
